@@ -4,6 +4,9 @@ from rest_framework import status, filters
 from profiles_api import serializers, models
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.settings import api_settings
+
 from profiles_api import permissions
 
 
@@ -105,3 +108,11 @@ class UserProfileModelViewSet(viewsets.ModelViewSet):
     filter_backends =   (filters.SearchFilter,)
     search_fields = ('name','email',)
 
+class UserLoginAPIView(ObtainAuthToken):
+    """Handle creating user authentication token"""
+
+    #ObtainAuthToken does not enable itself in browser
+    renderer_classes    =   api_settings.DEFAULT_RENDERER_CLASSES
+    #it adds the renderer classes to obtainAuthToken view which will enable in django admin
+
+    
