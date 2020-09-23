@@ -115,4 +115,23 @@ class UserLoginAPIView(ObtainAuthToken):
     renderer_classes    =   api_settings.DEFAULT_RENDERER_CLASSES
     #it adds the renderer classes to obtainAuthToken view which will enable in django admin
 
-    
+
+class UserProfileFeedViewSet(viewsets.ModelViewSet):
+    """Handles creating, reading and updating profile feed items"""
+    authentication_classes  =   (TokenAuthentication,)
+    serializer_class        =   serializers.ProfileFeedItemSerializer
+    queryset                =   models.ProfileFeedItem.objects.all()
+
+    def performed_create(self, serializer):
+        """Sets the user profile to logged in user"""
+        #To customize the logic for creating an object
+        #This function will gets called with every HTTP POST request to ViewSet
+
+        #This save function is used to save the contents of the serializer
+        # to an object in the database
+        serializer.save(user_profile=self.request.user)
+        #request object gets passed into all view sets every time a request is made
+        #It contains all of the details about the requestbeing made to the ViewSet
+        
+        
+
