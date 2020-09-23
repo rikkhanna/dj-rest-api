@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin, BaseUserManager
-
+from django.conf import settings #used to retrieve settings from settings.py
 
 class UserProfileManager(BaseUserManager):
     """Manager for user profiles"""
@@ -51,3 +51,20 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         """Return string representation of user"""
         return self.email
+
+
+
+class ProfileFeedItem(models.Model):
+    """Profile status update"""
+    #use FK to link models with other models
+    user_profile = models.ForeignKey(
+        settings.AUTH_USER_MODEL, #don't hardcode the model name here, you want to switch back to default user model
+        on_delete=models.CASCADE, #remove the associated feed items if remote user profile is deleted
+    )
+    status_text =   models.CharField(max_length=255)
+    created_on = models.DateTimeField(auto_now_add=True) #automatically set date time 
+
+    def __str__(self):
+        """Return model as a string"""
+
+        return self.status_text
